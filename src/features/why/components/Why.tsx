@@ -49,7 +49,7 @@ const WhyModal: React.FC<WhyModalProps> = ({ isOpen, onClose }) => {
         </styled.h2>
         <styled.p>
           In 2019 I became very interested in consciousness and the nature of
-          reality. I came to believe that{" "}
+          reality. I now believe that{" "}
           <Link href={LINKS.meaningInAbsurdity}>
             consciousness is the fundamental building block of reality.
           </Link>
@@ -78,12 +78,13 @@ const WhyModal: React.FC<WhyModalProps> = ({ isOpen, onClose }) => {
             listStyleType="disc"
           >
             <styled.li>How does the app work? Is it truly random?</styled.li>
+            <styled.li>Was I doing better than random chance?</styled.li>
             <styled.li>
-              Was I improving or consistently getting higher scores?
+              Was I consistently getting higher scores, or improving over time?
             </styled.li>
             <styled.li>
-              Did I do better when I took my time with each turn, or when I sped
-              through it and let my "intuition" guide me?
+              Was I doing better when I took my time with each turn, or when I
+              sped through it and let my "intuition" guide me?
             </styled.li>
           </styled.ul>
         </styled.div>
