@@ -55,7 +55,7 @@ type GameButtonsProps = {
   disabled: boolean;
   clickedButton: GameResponse | null;
   showCorrectChoice: boolean;
-  currentCorrectButton: GameResponse | null;
+  previouslyCorrectButton: GameResponse | null;
 };
 
 export const GameButtons: React.FC<GameButtonsProps> = ({
@@ -63,7 +63,7 @@ export const GameButtons: React.FC<GameButtonsProps> = ({
   disabled,
   clickedButton,
   showCorrectChoice,
-  currentCorrectButton,
+  previouslyCorrectButton,
 }) => {
   const getButtonStyles = (color: GameResponse) => {
     return gameButtonStyles({ color });
@@ -71,7 +71,8 @@ export const GameButtons: React.FC<GameButtonsProps> = ({
 
   const getButtonAnimationProps = (color: GameResponse) => {
     const isClicked = clickedButton === color;
-    const isHighlighted = showCorrectChoice && color === currentCorrectButton;
+    const isHighlighted =
+      showCorrectChoice && color === previouslyCorrectButton;
 
     return {
       animate: {

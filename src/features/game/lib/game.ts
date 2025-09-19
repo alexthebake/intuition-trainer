@@ -1,4 +1,4 @@
-import { MersenneTwister19937, Random } from "random-js";
+import { MersenneTwister19937, Random, shuffle } from "random-js";
 import {
   GameResponse,
   GameStats,
@@ -28,6 +28,7 @@ export class Game {
   private _score: number = 0;
   private _status: GameStatus = "playing";
   private _turns: GameTurn[] = [];
+  private _previouslyCorrectButton: GameResponse | null = null;
   private _currentCorrectButton: GameResponse | null = null;
   private _currentCorrectImage: string | null = null;
   private _showCorrectChoice: boolean = false;
@@ -41,17 +42,7 @@ export class Game {
     this._onStateChange = options.onStateChange;
 
     // Validate and set images
-    if (options.images) {
-      if (options.images.length !== Game.TOTAL_TURNS) {
-        throw new Error(
-          `Images array must contain exactly ${Game.TOTAL_TURNS} images, but received ${options.images.length}`
-        );
-      }
-      this._images = this.shuffleArray([...options.images]);
-    } else {
-      // Generate default images if none provided
-      this._images = this.shuffleArray(this.generateDefaultImages());
-    }
+    this._images = this.shuffleImages(options.images);
 
     // Start timing first turn
     this._turnStartTime = Date.now();
@@ -204,12 +195,14 @@ export class Game {
     this.emitStateChange();
 
     if (!gameComplete) {
+      // Immediately generate new turn
+      this.generateNewTurn();
+      // Start timing next turn
+      this._turnStartTime = Date.now();
+      this.emitStateChange();
       // Generate next turn after showing the correct choice for 1 second
       setTimeout(() => {
         this._showCorrectChoice = false;
-        this.generateNewTurn();
-        // Start timing next turn
-        this._turnStartTime = Date.now();
         this.emitStateChange();
       }, 1000);
     }
@@ -257,12 +250,12 @@ export class Game {
     this._turns.push(passTurn);
 
     // Emit state change immediately
+    this.generateNewTurn();
     this.emitStateChange();
 
     // Generate new turn after showing correct choice
     setTimeout(() => {
       this._showCorrectChoice = false;
-      this.generateNewTurn();
       // Start timing next turn
       this._turnStartTime = Date.now();
       this.emitStateChange();
@@ -295,8 +288,8 @@ export class Game {
       0,
       Game.BUTTON_COLORS.length - 1
     );
+    this._previouslyCorrectButton = this._currentCorrectButton;
     this._currentCorrectButton = Game.BUTTON_COLORS[randomIndex];
-
     // Use the image for this turn from the images array
     this._currentCorrectImage = this._images[this._currentTurn];
   }
@@ -338,6 +331,7 @@ export class Game {
       score: this._score,
       status: this._status,
       isGameComplete: this.isGameComplete,
+      previouslyCorrectButton: this._previouslyCorrectButton,
       currentCorrectButton: this._currentCorrectButton,
       currentCorrectImage: this._currentCorrectImage,
       showCorrectChoice: this._showCorrectChoice,
@@ -352,6 +346,21 @@ export class Game {
   private emitStateChange(): void {
     if (this._onStateChange) {
       this._onStateChange(this.getGameStateSnapshot());
+    }
+  }
+
+  private shuffleImages(images?: string[]): string[] {
+    const seed = MersenneTwister19937.autoSeed();
+    if (images) {
+      if (images.length !== Game.TOTAL_TURNS) {
+        throw new Error(
+          `Images array must contain exactly ${Game.TOTAL_TURNS} images, but received ${images.length}`
+        );
+      }
+      return shuffle(seed, [...images]);
+    } else {
+      // Generate default images if none provided
+      return shuffle(seed, this.generateDefaultImages());
     }
   }
 }

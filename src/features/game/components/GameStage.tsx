@@ -20,6 +20,7 @@ export const GameStage: React.FC = () => {
     showCorrectChoice,
     currentCorrectButton,
     currentCorrectImage,
+    previouslyCorrectButton,
     isGameComplete,
   } = gameStore.use(({ state }) => state);
 
@@ -91,7 +92,7 @@ export const GameStage: React.FC = () => {
         disabled={status !== "playing"}
         clickedButton={clickedButton}
         showCorrectChoice={showCorrectChoice}
-        currentCorrectButton={currentCorrectButton}
+        previouslyCorrectButton={previouslyCorrectButton}
       />
 
       {/* Turn Counter */}
