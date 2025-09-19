@@ -15,17 +15,13 @@ export const Stats: React.FC = () => {
     <styled.div
       display="flex"
       flexDirection="column"
-      gap="6"
+      gap="16"
       p="6"
       maxWidth={1200}
       mx="auto"
     >
       {/* Header with time period selector */}
-      <styled.div display="flex" flexDirection="column" gap="4">
-        <styled.h2 fontSize="2xl" fontWeight="bold">
-          Game Statistics
-        </styled.h2>
-
+      <styled.div display="flex" flexDirection="column">
         <styled.div
           display="flex"
           alignItems="center"
@@ -33,7 +29,9 @@ export const Stats: React.FC = () => {
           justifyContent="space-between"
           width="full"
         >
-          <styled.div display="flex" alignItems="center" gap="2" />
+          <styled.h2 fontSize="2xl" fontWeight="bold">
+            Game Statistics
+          </styled.h2>
 
           {/* Export and Reset History Buttons */}
           <styled.div display="flex" alignItems="center" gap="2">
