@@ -1,16 +1,56 @@
-import { Stats } from "@/features/statistics/components/Stats";
+import { GithubIcon } from "lucide-react";
+
+import { styled } from "@/styles/jsx";
+import { Button } from "@/ui/Button";
 import { GameStage } from "@@/game";
+import { PrivacyPolicy } from "@@/privacy-policy";
+import { Stats } from "@@/statistics";
 import { ThemeProvider, ThemeSelector } from "@@/theme";
-import { styled } from "./styles/jsx";
+import { Why } from "@@/why";
 
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <styled.div pb="16">
-        <ThemeSelector />
+        <AppHeader />
         <GameStage />
         <Stats />
+        <styled.div display="flex" alignItems="center" justifyContent="center">
+          <Why />
+          <PrivacyPolicy />
+        </styled.div>
       </styled.div>
     </ThemeProvider>
+  );
+};
+
+// Helpers
+
+const goToGithub = () => {
+  window.open("https://github.com/alexthebake/intuition-trainer", "_blank");
+};
+
+const AppHeader: React.FC = () => {
+  return (
+    <styled.div
+      position="fixed"
+      top="0"
+      width="full"
+      display="flex"
+      justifyContent="space-between"
+      gap="2"
+      p="4"
+    >
+      <styled.div display="flex" alignItems="center" gap="2">
+        <styled.img src="/public/logo/logo.png" height="10" width="10" />
+        <styled.span fontWeight="bold">Intuition Trainer</styled.span>
+      </styled.div>
+      <styled.div display="flex" alignItems="center" gap="2">
+        <Button size="icon" onClick={goToGithub}>
+          <GithubIcon />
+        </Button>
+        <ThemeSelector />
+      </styled.div>
+    </styled.div>
   );
 };

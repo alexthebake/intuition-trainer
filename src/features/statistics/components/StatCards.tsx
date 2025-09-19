@@ -1,21 +1,16 @@
 import { styled } from "@/styles/jsx";
 import { WithCss } from "@/styles/types";
 import { useStatCards } from "@@/statistics/hooks/useStatCards";
-import { TimePeriod } from "@@/statistics/statistics.types";
 
-export type StatCardsProps = {
-  selectedPeriod: TimePeriod;
-};
-
-export const StatCards: React.FC<StatCardsProps> = ({ selectedPeriod }) => {
+export const StatCards: React.FC = () => {
   const {
     bestScore,
     averageScore,
     medianScore,
-    totalGames,
+    totalGamesPlayed,
     averageGameTime,
-    averageTurnTime,
-  } = useStatCards(selectedPeriod);
+    averageTurnTimeAcrossGames,
+  } = useStatCards();
 
   return (
     <styled.div
@@ -40,7 +35,7 @@ export const StatCards: React.FC<StatCardsProps> = ({ selectedPeriod }) => {
           <StatCard value={bestScore} label="Best Score" />
           <StatCard value={averageScore} label="Average Score" />
           <StatCard value={medianScore} label="Median Score" />
-          <StatCard value={totalGames} label="Games Played" />
+          <StatCard value={totalGamesPlayed} label="Games Played" />
         </styled.div>
       </styled.div>
 
@@ -57,7 +52,10 @@ export const StatCards: React.FC<StatCardsProps> = ({ selectedPeriod }) => {
             justifyContent="center"
           >
             <StatCard value={`${averageGameTime}s`} label="Avg Game Time" />
-            <StatCard value={`${averageTurnTime}s`} label="Avg Turn Time" />
+            <StatCard
+              value={`${averageTurnTimeAcrossGames}s`}
+              label="Avg Turn Time"
+            />
           </styled.div>
         )}
       </styled.div>

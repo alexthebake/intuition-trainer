@@ -2,32 +2,27 @@ import {
   VictoryAxis,
   VictoryBar,
   VictoryChart,
-  VictoryContainer,
+  VictoryClipContainer,
   VictoryLine,
   VictoryScatter,
   VictoryTooltip,
+  VictoryVoronoiContainer,
 } from "victory";
 
 import { styled } from "@/styles/jsx";
 import { createCustomTheme } from "@@/statistics/components/ChartHelpers";
-import { ChartTooltip } from "@@/statistics/components/ChartTooltip";
 import { useScoreChart } from "@@/statistics/hooks/useScoreChart";
-import { TimePeriod } from "@@/statistics/statistics.types";
-import { useIsDarkMode } from "@@/theme";
+
 import { WithCss } from "@/styles/types";
+import { useIsDarkMode } from "@@/theme";
+import { round } from "lodash";
 
-export type ScoreChartProps = {
-  selectedPeriod: TimePeriod;
-} & WithCss;
+export type ScoreChartProps = WithCss;
 
-export const ScoreChart: React.FC<ScoreChartProps> = ({
-  selectedPeriod,
-  css,
-}) => {
+export const ScoreChart: React.FC<ScoreChartProps> = ({ css }) => {
   const isDark = useIsDarkMode();
 
-  const { lineChartData, barChartData, trendLineData, todayDomain } =
-    useScoreChart(selectedPeriod);
+  const { lineChartData, barChartData, trendLineData } = useScoreChart();
 
   return (
     <styled.div
@@ -43,24 +38,89 @@ export const ScoreChart: React.FC<ScoreChartProps> = ({
       <styled.h3
         fontSize="lg"
         fontWeight="semibold"
-        mb={4}
         color={{ base: "gray.900", _dark: "gray.100" }}
       >
         Score Over Time & Game Duration
       </styled.h3>
-      <styled.div fontSize="sm" color="text.secondary" mb={2}>
-        Blue line/dots: Score (0-24) | Cyan bars: Game time (normalized scale,
-        hover for actual seconds)
+      <styled.p fontSize="sm" color="text.muted">
+        Shows your scores over time and each game's duration.
+      </styled.p>
+      <styled.div
+        display="flex"
+        alignItems="center"
+        gap="4"
+        mt="2"
+        fontSize="xs"
+        color="text.muted"
+        flexWrap="wrap"
+      >
+        <styled.div display="flex" alignItems="center" gap="1">
+          <styled.span w="2" h="2" bg="stats.score.datum" rounded="xs" />
+          <styled.span fontWeight="bold">Score</styled.span>
+        </styled.div>
+
+        <styled.div display="flex" alignItems="center" gap="1">
+          <styled.span
+            position="relative"
+            w="4"
+            h="3"
+            bg="transparent"
+            rounded="xs"
+            overflow="hidden"
+          >
+            <styled.span
+              position="absolute"
+              top="50%"
+              left="0%"
+              w="full"
+              h="1px"
+              borderTop="2px dashed"
+              borderTopColor="stats.score.trendline"
+            />
+          </styled.span>
+          <styled.span fontWeight="bold">Trend line</styled.span>
+        </styled.div>
+
+        <styled.div display="flex" alignItems="center" gap="1">
+          <styled.span w="2" h="2" bg="stats.duration.datum" rounded="xs" />
+          <styled.span fontWeight="bold">Game duration</styled.span>
+        </styled.div>
       </styled.div>
       <VictoryChart
         theme={createCustomTheme(isDark)}
-        height={300}
         width={600}
-        containerComponent={<VictoryContainer responsive />}
-        domain={selectedPeriod === "today" ? todayDomain : undefined}
+        containerComponent={
+          <VictoryVoronoiContainer
+            voronoiDimension="x"
+            labels={({ datum }) => {
+              console.log(datum.childName);
+              if (datum.childName === "game-time") {
+                return `Duration: ${round(datum.y, 2)}s`;
+              }
+              if (datum.childName === "score-points") {
+                return `Score: ${round(datum.y, 2)} points`;
+              }
+              if (datum.childName === "trend-line") {
+                return `Avg: ${round(datum.y, 2)} points`;
+              }
+              return "---";
+            }}
+            labelComponent={<VictoryTooltip />}
+            responsive
+          />
+        }
         padding={{ left: 60, right: 40, top: 40, bottom: 80 }}
       >
-        <VictoryAxis dependentAxis label="Score / Normalized Time" />
+        <VictoryAxis
+          tickValues={[0, 6, 12, 18, 24]}
+          dependentAxis
+          label="Score / Normalized Time"
+          style={{
+            parent: {
+              paddingRight: "20rem",
+            },
+          }}
+        />
         <VictoryAxis
           label={"Game Number"}
           tickFormat={(gameNumber) => gameNumber.toString()}
@@ -76,6 +136,7 @@ export const ScoreChart: React.FC<ScoreChartProps> = ({
         {/* Game time bars */}
         {barChartData.length > 0 && (
           <VictoryBar
+            name="game-time"
             data={barChartData}
             style={{
               data: {
@@ -84,13 +145,18 @@ export const ScoreChart: React.FC<ScoreChartProps> = ({
                 strokeWidth: 0,
               },
             }}
-            labelComponent={<ChartTooltip isDark={isDark} />}
+            groupComponent={
+              <VictoryClipContainer
+                clipPadding={{ left: 0, right: 0, top: 0, bottom: 0 }}
+              />
+            }
           />
         )}
 
         {/* Trend line for scores */}
         {trendLineData.length > 0 && (
           <VictoryLine
+            name="trend-line"
             data={trendLineData}
             style={{
               data: {
@@ -104,16 +170,17 @@ export const ScoreChart: React.FC<ScoreChartProps> = ({
 
         {/* Score points and line */}
         <VictoryScatter
+          name="score-points"
           data={lineChartData}
           style={{
             data: {
               fill: "var(--colors-stats-score-datum)",
             },
           }}
-          labelComponent={<VictoryTooltip />}
         />
 
         <VictoryLine
+          name="score-line"
           data={lineChartData}
           style={{
             data: {

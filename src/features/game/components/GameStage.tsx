@@ -69,18 +69,15 @@ export const GameStage: React.FC = () => {
         alignItems="center"
         justifyContent="center"
         gap="2"
-        mb="8"
+        mb="16"
       >
-        <styled.h1 fontSize="2xl" fontWeight="bold" mb="2">
-          Intuition Trainer
-        </styled.h1>
         <styled.p
           fontSize="sm"
           color="text.secondary"
           textAlign="center"
           maxWidth="450"
         >
-          Behind one of these buttons is a picture. Your job is to guess which
+          Behind one of these buttons is an image. Your job is to guess which
           button is the correct one. Listen to your intuition and{" "}
           <em>good luck!</em>
         </styled.p>
@@ -114,6 +111,7 @@ export const GameStage: React.FC = () => {
       <GameControls
         onReset={handleReset}
         onPass={handlePass}
+        isGameComplete={isGameComplete}
         passDisabled={status !== "playing"}
       />
 

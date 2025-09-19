@@ -1,5 +1,12 @@
 import { MersenneTwister19937, Random } from "random-js";
-import { GameResponse, GameStats, GameStatus, GameTurn } from "./game.types";
+import {
+  GameResponse,
+  GameStats,
+  GameStatus,
+  GameTurn,
+  isPlayerChoiceTurn,
+  PassTurn,
+} from "./game.types";
 
 export type SerializedGameState = ReturnType<Game["getGameStateSnapshot"]>;
 
@@ -87,10 +94,10 @@ export class Game {
 
   get gameStats(): GameStats {
     const correctGuesses = this._turns.filter(
-      (turn) => turn.wasCorrect === true
+      (turn) => isPlayerChoiceTurn(turn) && turn.wasCorrect === true
     ).length;
     const incorrectGuesses = this._turns.filter(
-      (turn) => turn.wasCorrect === false
+      (turn) => isPlayerChoiceTurn(turn) && turn.wasCorrect === false
     ).length;
     const passes = this._turns.filter((turn) => turn.passed).length;
 
@@ -99,19 +106,18 @@ export class Game {
       (turn) => turn.turnTime !== undefined
     );
     const averageTurnTime =
-      timedTurns.length > 0
-        ? timedTurns.reduce((sum, turn) => sum + (turn.turnTime || 0), 0) /
-          timedTurns.length
-        : undefined;
+      timedTurns.reduce((sum, turn) => sum + (turn.turnTime || 0), 0) /
+      timedTurns.length;
 
     return {
+      turns: this._turns,
       score: this._score,
       totalTurns: this._currentTurn,
       correctGuesses,
       incorrectGuesses,
       passes,
-      totalGameTime: this._totalGameTime > 0 ? this._totalGameTime : undefined,
-      averageTurnTime,
+      totalGameTime: this._totalGameTime,
+      averageTurnTime: averageTurnTime,
     };
   }
 
@@ -238,13 +244,13 @@ export class Game {
     }
 
     // Record the pass (but don't increment turn)
-    const passTurn: GameTurn = {
+    const passTurn: PassTurn = {
+      passed: true,
       turnNumber: this._currentTurn + 1, // This represents what would have been the turn number
       correctButton: this._currentCorrectButton!,
       correctImage: this._currentCorrectImage!,
-      passed: true,
-      turnTime,
       timestamp: passTime,
+      turnTime,
     };
 
     // Add to history but don't increment current turn

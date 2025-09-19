@@ -1,24 +1,42 @@
 export type GameResponse = "red" | "blue" | "green" | "yellow";
 
-export type GameTurn = {
-  turnNumber: number;
+export type BaseTurn = {
   correctButton: GameResponse;
   correctImage: string;
-  playerChoice?: GameResponse;
-  wasCorrect?: boolean;
-  passed: boolean;
-  turnTime?: number; // Time taken for this turn in milliseconds
-  timestamp?: number; // When this turn was completed
+  timestamp: number;
+  turnNumber: number;
+  turnTime?: number;
 };
 
+export type PlayerChoiceTurn = BaseTurn & {
+  playerChoice: GameResponse;
+  wasCorrect: boolean;
+  passed: false;
+};
+
+export type PassTurn = BaseTurn & {
+  passed: true;
+};
+
+export function isPlayerChoiceTurn(turn: GameTurn): turn is PlayerChoiceTurn {
+  return !turn.passed;
+}
+
+export function isPassTurn(turn: GameTurn): turn is PassTurn {
+  return turn.passed;
+}
+
+export type GameTurn = PlayerChoiceTurn | PassTurn;
+
 export type GameStats = {
-  score: number;
-  totalTurns: number;
+  averageTurnTime: number;
   correctGuesses: number;
   incorrectGuesses: number;
   passes: number;
-  totalGameTime?: number; // Total game time in milliseconds
-  averageTurnTime?: number; // Average time per turn in milliseconds (excluding first turn)
+  score: number;
+  totalGameTime: number;
+  totalTurns: number;
+  turns: GameTurn[];
 };
 
 export type GameStatus = "ready" | "playing" | "completed";

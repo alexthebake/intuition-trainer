@@ -11,8 +11,12 @@ export const useGameLifecycle = () => {
   const gameStartTimeRef = useRef<number | null>(null);
   const { timeouts, clearTimeout } = useTimeoutManager();
 
-  const { state, game } = gameStore.use();
-  const { status, isGameComplete, showCorrectChoice } = state;
+  const game = gameStore.use(({ game }) => game);
+  const status = gameStore.use(({ state }) => state.status);
+  const isGameComplete = gameStore.use(({ state }) => state.isGameComplete);
+  const showCorrectChoice = gameStore.use(
+    ({ state }) => state.showCorrectChoice
+  );
 
   // Initialize game with images on mount
   useEffect(() => {
@@ -35,14 +39,7 @@ export const useGameLifecycle = () => {
       // Game just completed, save to history
       gameCompletedRef.current = true;
 
-      const gameStats = game.gameStats;
-
-      const duration = gameStartTimeRef.current
-        ? Date.now() - gameStartTimeRef.current
-        : undefined;
-
-      historyStore.actions.saveGameResult(gameStats, duration);
-      console.log("Game completed and saved to history:", gameStats);
+      historyStore.actions.saveGameResult(game.gameStats);
     }
   }, [isGameComplete, status, game]);
 

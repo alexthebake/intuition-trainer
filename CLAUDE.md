@@ -1,3 +1,13 @@
+# Context
+
+## Gotchas
+
+### Tracking Game and Turn Time
+
+When tracking game and turn time, always remember that we DO NOT track the first turn.
+This is because the user may be idle during their very first turn.
+Because of this, we only start tracking time per turn and the game start time AFTER the first turn has been played.
+
 # General Architecture
 
 - We're using React, Typescript, and Vite

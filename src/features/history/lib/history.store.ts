@@ -1,64 +1,28 @@
 import { createStore, useStore } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 import { GameStats } from "@@/game/lib/game.types";
+import { useMemo } from "react";
+import { round } from "lodash";
 
 export type GameHistoryEntry = {
   id: string;
   timestamp: Date;
   stats: GameStats;
-  duration?: number; // Optional: game duration in milliseconds
 };
 
 export type HistoryStoreState = {
   history: GameHistoryEntry[];
-  totalGamesPlayed: number;
-  bestScore: number;
-  averageScore: number;
-  medianScore: number;
-  averageGameTime: number;
-  averageTurnTimeAcrossGames: number;
-  lastGameStats: GameStats | null;
 };
 
 const store = createStore<HistoryStoreState>()(
   persist<HistoryStoreState>(
     () => ({
       history: [],
-      totalGamesPlayed: 0,
-      bestScore: 0,
-      averageScore: 0,
-      medianScore: 0,
-      averageGameTime: 0,
-      averageTurnTimeAcrossGames: 0,
-      lastGameStats: null,
     }),
     {
       name: "esp-trainer-history",
-      partialize: (state) => ({
-        history: state.history,
-        totalGamesPlayed: 0, // Will be recalculated
-        bestScore: 0, // Will be recalculated
-        averageScore: 0, // Will be recalculated
-        medianScore: 0, // Will be recalculated
-        averageGameTime: 0, // Will be recalculated
-        averageTurnTimeAcrossGames: 0, // Will be recalculated
-        lastGameStats: null, // Will be recalculated
-      }),
-      onRehydrateStorage: () => (state) => {
-        if (state) {
-          // Recalculate derived stats after rehydration
-          const derivedStats = calculateDerivedStats(state.history);
-          store.setState({
-            ...state,
-            ...derivedStats,
-            lastGameStats:
-              state.history.length > 0
-                ? state.history[state.history.length - 1].stats
-                : null,
-          });
-        }
-      },
+      storage: createJSONStorage(() => localStorage),
     }
   )
 );
@@ -69,8 +33,12 @@ function useHistoryStore<U = HistoryStoreState>(
   return useStore(store, fn);
 }
 
-// Helper function to calculate derived stats
-const calculateDerivedStats = (history: GameHistoryEntry[]) => {
+function useDerivedStats() {
+  const history = useHistoryStore((state) => state.history);
+  return useMemo(() => calculateDerivedStats(history), [history]);
+}
+
+function calculateDerivedStats(history: GameHistoryEntry[]) {
   if (history.length === 0) {
     return {
       totalGamesPlayed: 0,
@@ -86,9 +54,15 @@ const calculateDerivedStats = (history: GameHistoryEntry[]) => {
   const bestScore = Math.max(...scores);
   const averageScore =
     scores.reduce((sum, score) => sum + score, 0) / scores.length;
-  const medianScore = scores.sort((a, b) => a - b)[
-    Math.floor(scores.length / 2)
-  ];
+
+  // Calculate median properly for both odd and even length arrays
+  const sortedScores = [...scores].sort((a, b) => a - b);
+  const medianScore =
+    sortedScores.length % 2 === 1
+      ? sortedScores[Math.floor(sortedScores.length / 2)]
+      : (sortedScores[sortedScores.length / 2 - 1] +
+          sortedScores[sortedScores.length / 2]) /
+        2;
 
   // Calculate average game time
   const gamesWithTime = history.filter(
@@ -117,20 +91,19 @@ const calculateDerivedStats = (history: GameHistoryEntry[]) => {
   return {
     totalGamesPlayed: history.length,
     bestScore,
-    averageScore: Math.round(averageScore * 100) / 100, // Round to 2 decimal places
+    averageScore: round(averageScore / 100, 2),
     medianScore,
-    averageGameTime: Math.round(averageGameTime),
-    averageTurnTimeAcrossGames: Math.round(averageTurnTimeAcrossGames),
+    averageGameTime: round(averageGameTime / 1000, 2),
+    averageTurnTimeAcrossGames: round(averageTurnTimeAcrossGames / 1000, 2),
   };
-};
+}
 
 // Actions
-const saveGameResult = (stats: GameStats, duration?: number) => {
+const saveGameResult = (stats: GameStats) => {
   const entry: GameHistoryEntry = {
     id: `game-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     timestamp: new Date(),
     stats: { ...stats },
-    duration,
   };
 
   store.setState((state) => {
@@ -146,15 +119,7 @@ const saveGameResult = (stats: GameStats, duration?: number) => {
 };
 
 const clearHistory = () => {
-  store.setState({
-    history: [],
-    totalGamesPlayed: 0,
-    bestScore: 0,
-    averageScore: 0,
-    averageGameTime: 0,
-    averageTurnTimeAcrossGames: 0,
-    lastGameStats: null,
-  });
+  store.setState({ history: [] });
 };
 
 const getRecentGames = (count: number = 10) => {
@@ -176,14 +141,11 @@ const getGameById = (id: string) => {
 
 const exportHistoryAsJSON = () => {
   const state = store.getState();
+  const derivedStats = calculateDerivedStats(state.history);
   const exportData = {
     exportDate: new Date().toISOString(),
-    totalGamesPlayed: state.totalGamesPlayed,
-    bestScore: state.bestScore,
-    averageScore: state.averageScore,
-    averageGameTime: state.averageGameTime,
-    averageTurnTimeAcrossGames: state.averageTurnTimeAcrossGames,
     history: state.history,
+    ...derivedStats,
   };
 
   const dataStr = JSON.stringify(exportData, null, 2);
@@ -202,6 +164,7 @@ const exportHistoryAsJSON = () => {
 export const historyStore = {
   store,
   use: useHistoryStore,
+  useDerivedStats,
   actions: {
     saveGameResult,
     clearHistory,

@@ -1751,6 +1751,10 @@ const tokens = {
     "value": "var(--colors-progress-tick)",
     "variable": "var(--colors-progress-tick)"
   },
+  "colors.link": {
+    "value": "var(--colors-link)",
+    "variable": "var(--colors-link)"
+  },
   "colors.control.bg": {
     "value": "var(--colors-control-bg)",
     "variable": "var(--colors-control-bg)"
@@ -1766,6 +1770,18 @@ const tokens = {
   "colors.control.text.inverted": {
     "value": "var(--colors-control-text-inverted)",
     "variable": "var(--colors-control-text-inverted)"
+  },
+  "colors.modal.bg": {
+    "value": "var(--colors-modal-bg)",
+    "variable": "var(--colors-modal-bg)"
+  },
+  "colors.modal.text": {
+    "value": "var(--colors-modal-text)",
+    "variable": "var(--colors-modal-text)"
+  },
+  "colors.modal.border": {
+    "value": "var(--colors-modal-border)",
+    "variable": "var(--colors-modal-border)"
   },
   "colors.complete.bg": {
     "value": "var(--colors-complete-bg)",
@@ -2099,6 +2115,10 @@ const tokens = {
     "value": "var(--colors-color-palette-inverted)",
     "variable": "var(--colors-color-palette-inverted)"
   },
+  "colors.colorPalette.border": {
+    "value": "var(--colors-color-palette-border)",
+    "variable": "var(--colors-color-palette-border)"
+  },
   "colors.colorPalette.card.bg": {
     "value": "var(--colors-color-palette-card-bg)",
     "variable": "var(--colors-color-palette-card-bg)"
@@ -2110,10 +2130,6 @@ const tokens = {
   "colors.colorPalette.card.border": {
     "value": "var(--colors-color-palette-card-border)",
     "variable": "var(--colors-color-palette-card-border)"
-  },
-  "colors.colorPalette.border": {
-    "value": "var(--colors-color-palette-border)",
-    "variable": "var(--colors-color-palette-border)"
   },
   "colors.colorPalette.score.datum": {
     "value": "var(--colors-color-palette-score-datum)",

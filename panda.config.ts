@@ -41,13 +41,19 @@ export default defineConfig({
           // Progress bar colors
           progress: {
             bg: {
-              value: { base: "{colors.gray.300}", _dark: "{colors.gray.700}" },
+              value: { base: "{colors.gray.200}", _dark: "{colors.gray.800}" },
             },
             fill: {
-              value: { base: "{colors.blue.400}", _dark: "{colors.blue.400}" },
+              value: { base: "{colors.blue.500}", _dark: "{colors.blue.400}" },
             },
             tick: {
               value: { base: "{colors.gray.500}", _dark: "{colors.gray.400}" },
+            },
+          },
+
+          link: {
+            DEFAULT: {
+              value: { base: "{colors.blue.700}", _dark: "{colors.blue.300}" },
             },
           },
 
@@ -69,13 +75,28 @@ export default defineConfig({
             },
           },
 
+          modal: {
+            bg: {
+              value: { base: "{colors.white}", _dark: "{colors.gray.800}" },
+            },
+            text: {
+              value: { base: "{colors.gray.900}", _dark: "{colors.gray.100}" },
+            },
+            border: {
+              value: { base: "{colors.gray.200}", _dark: "{colors.gray.700}" },
+            },
+          },
+
           // Game complete section
           complete: {
             bg: {
-              value: { base: "{colors.blue.100}", _dark: "{colors.blue.900}" },
+              value: {
+                base: "{colors.blue.100}",
+                _dark: "{colors.blue.900/50}",
+              },
             },
             text: {
-              value: { base: "{colors.black}", _dark: "{colors.white}" },
+              value: { base: "{colors.blue.900}", _dark: "{colors.blue.100}" },
             },
           },
 

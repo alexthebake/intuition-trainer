@@ -1,7 +1,4 @@
-import { useState } from "react";
-
 import { styled } from "@/styles/jsx";
-import { Button } from "@/ui/Button";
 import {
   ExportHistoryButton,
   ResetHistoryButton,
@@ -10,12 +7,9 @@ import {
 import { ScoreChart } from "@@/statistics/components/ScoreChart";
 import { ScoreDistributionChart } from "@@/statistics/components/ScoreDistributionChart";
 import { StatCards } from "@@/statistics/components/StatCards";
-import { TimePeriod } from "@@/statistics/statistics.types";
 
 export const Stats: React.FC = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState<TimePeriod>("all-time");
-
-  const hasHistory = useHasHistory(selectedPeriod);
+  const hasHistory = useHasHistory();
 
   return (
     <styled.div
@@ -39,24 +33,7 @@ export const Stats: React.FC = () => {
           justifyContent="space-between"
           width="full"
         >
-          <styled.div display="flex" alignItems="center" gap="2">
-            <Button
-              onClick={() => setSelectedPeriod("today")}
-              variant={selectedPeriod === "today" ? "primary" : "secondary"}
-              size="xs"
-              disabled={!hasHistory}
-            >
-              Today
-            </Button>
-            <Button
-              onClick={() => setSelectedPeriod("all-time")}
-              variant={selectedPeriod === "all-time" ? "primary" : "secondary"}
-              size="xs"
-              disabled={!hasHistory}
-            >
-              All Time
-            </Button>
-          </styled.div>
+          <styled.div display="flex" alignItems="center" gap="2" />
 
           {/* Export and Reset History Buttons */}
           <styled.div display="flex" alignItems="center" gap="2">
@@ -70,7 +47,7 @@ export const Stats: React.FC = () => {
       {hasHistory ? (
         <>
           {/* Statistics Cards */}
-          <StatCards selectedPeriod={selectedPeriod} />
+          <StatCards />
 
           <styled.div
             display="flex"
@@ -80,10 +57,10 @@ export const Stats: React.FC = () => {
             gap="4"
           >
             {/* Score Over Time and Game Duration Chart */}
-            <ScoreChart selectedPeriod={selectedPeriod} />
+            <ScoreChart />
 
             {/* Score Distribution Histogram */}
-            <ScoreDistributionChart selectedPeriod={selectedPeriod} />
+            <ScoreDistributionChart />
           </styled.div>
         </>
       ) : (
@@ -99,9 +76,7 @@ export const Stats: React.FC = () => {
             fontSize="lg"
             color={{ base: "gray.600", _dark: "gray.400" }}
           >
-            {selectedPeriod === "today"
-              ? "No games played today yet. Start playing to see your stats!"
-              : "No games played yet. Start playing to see your stats!"}
+            No games played yet. Start playing to see your stats!
           </styled.div>
         </styled.div>
       )}

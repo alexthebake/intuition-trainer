@@ -52,6 +52,18 @@ const buttonStyles = cva({
           color: "button.danger.hover.text",
         },
       },
+      ghost: {
+        border: "1px solid",
+        borderColor: "transparent",
+        bg: "transparent",
+        color: "button.secondary.text/50",
+        shadow: "none",
+        _hover: {
+          color: "button.secondary.text",
+          bg: "button.secondary.hover/20",
+          shadow: "none",
+        },
+      },
     },
     size: {
       xs: {
@@ -79,6 +91,22 @@ const buttonStyles = cva({
         "& svg": {
           width: "6",
           height: "6",
+        },
+      },
+      icon: {
+        w: "10",
+        h: "10",
+        "& svg": {
+          width: "5",
+          height: "5",
+        },
+      },
+      iconSmall: {
+        w: "7",
+        h: "7",
+        "& svg": {
+          width: "4",
+          height: "4",
         },
       },
     },
