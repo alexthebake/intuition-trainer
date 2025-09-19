@@ -94,16 +94,21 @@ export const GameStage: React.FC = () => {
       />
 
       {/* Turn Counter */}
-      <styled.div fontSize="2xl" fontWeight="bold" mb="8" color="text">
-        Turn {currentTurn}
+      <styled.div textAlign="center" mb="4">
+        <styled.div fontSize="2xl" fontWeight="bold" color="text">
+          Turn {currentTurn}
+        </styled.div>
+        <styled.div fontSize="sm" color="text.muted">
+          of 24
+        </styled.div>
       </styled.div>
 
       {/* Keyboard Controls Hint */}
       <styled.div
         fontSize="sm"
         color="text.secondary"
-        mb="5"
         textAlign="center"
+        mb="8"
       >
         Use WASD or Arrow Keys
       </styled.div>
