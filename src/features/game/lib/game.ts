@@ -32,6 +32,8 @@ export class Game {
   private _currentCorrectButton: GameResponse | null = null;
   private _currentCorrectImage: string | null = null;
   private _showCorrectChoice: boolean = false;
+  private _hideCorrectChoiceTimeout: ReturnType<typeof setTimeout> | null =
+    null;
   private _onStateChange?: (state: SerializedGameState) => void;
   private _images: string[];
   private _gameStartTime: number | null = null;
@@ -138,23 +140,13 @@ export class Game {
     shouldPlayChime: boolean;
     gameComplete: boolean;
   } {
-    if (this._status !== "playing" || this.isGameComplete) {
-      throw new Error("Game is not in a playable state");
-    }
+    this.validateGameState();
 
     const wasCorrect = buttonColor === this._currentCorrectButton;
     const turnEndTime = Date.now();
 
-    // Calculate turn time (skip timing for first turn)
-    let turnTime: number | undefined;
-    if (this._currentTurn > 0 && this._turnStartTime) {
-      turnTime = turnEndTime - this._turnStartTime;
-    }
-
-    // Set game start time after first turn
-    if (this._currentTurn === 0) {
-      this._gameStartTime = turnEndTime;
-    }
+    const turnTime = this.calculateTurnTime(turnEndTime);
+    this.updateGameStartTime(turnEndTime);
 
     // Record the turn
     const turn: GameTurn = {
@@ -181,60 +173,43 @@ export class Game {
     // Advance to next turn
     this._currentTurn += 1;
 
+    // Emit state change immediately
+    this.emitStateChange();
+
     // Check if game is complete
-    const gameComplete = this.isGameComplete;
-    if (gameComplete) {
+    if (this.isGameComplete) {
       this._status = "completed";
       // Calculate total game time
       if (this._gameStartTime) {
         this._totalGameTime = turnEndTime - this._gameStartTime;
       }
-    }
-
-    // Emit state change immediately
-    this.emitStateChange();
-
-    if (!gameComplete) {
+    } else {
       // Immediately generate new turn
       this.generateNewTurn();
       // Start timing next turn
       this._turnStartTime = Date.now();
       this.emitStateChange();
-      // Generate next turn after showing the correct choice for 1 second
-      setTimeout(() => {
-        this._showCorrectChoice = false;
-        this.emitStateChange();
-      }, 1000);
+      // Show correct choice for 1 second if player was wrong
+      if (!wasCorrect) {
+        this.showCorrectChoiceWithTimeout(1000);
+      }
     }
 
     return {
       wasCorrect,
       shouldShowImage: wasCorrect,
       shouldPlayChime: wasCorrect,
-      gameComplete,
+      gameComplete: this.isGameComplete,
     };
   }
 
   pass(): void {
-    if (this._status !== "playing" || this.isGameComplete) {
-      throw new Error("Game is not in a playable state");
-    }
-
-    // Show the correct choice briefly
-    this._showCorrectChoice = true;
+    this.validateGameState();
 
     const passTime = Date.now();
 
-    // Calculate turn time for passes (skip timing for first turn)
-    let turnTime: number | undefined;
-    if (this._currentTurn > 0 && this._turnStartTime) {
-      turnTime = passTime - this._turnStartTime;
-    }
-
-    // Set game start time after first turn
-    if (this._currentTurn === 0) {
-      this._gameStartTime = passTime;
-    }
+    const turnTime = this.calculateTurnTime(passTime);
+    this.updateGameStartTime(passTime);
 
     // Record the pass (but don't increment turn)
     const passTurn: PassTurn = {
@@ -249,17 +224,12 @@ export class Game {
     // Add to history but don't increment current turn
     this._turns.push(passTurn);
 
-    // Emit state change immediately
+    // Generate new turn and emit state change
     this.generateNewTurn();
     this.emitStateChange();
 
-    // Generate new turn after showing correct choice
-    setTimeout(() => {
-      this._showCorrectChoice = false;
-      // Start timing next turn
-      this._turnStartTime = Date.now();
-      this.emitStateChange();
-    }, 1500); // Show correct choice longer for passes
+    // Show correct choice for 1.5 seconds (longer for passes)
+    this.showCorrectChoiceWithTimeout(1500);
   }
 
   hideCorrectChoice(): void {
@@ -282,6 +252,41 @@ export class Game {
   }
 
   // Private methods
+  private validateGameState(): void {
+    if (this._status !== "playing" || this.isGameComplete) {
+      throw new Error("Game is not in a playable state");
+    }
+  }
+
+  private calculateTurnTime(actionTime: number): number | undefined {
+    // Skip timing for first turn
+    if (this._currentTurn > 0 && this._turnStartTime) {
+      return actionTime - this._turnStartTime;
+    }
+    return undefined;
+  }
+
+  private updateGameStartTime(actionTime: number): void {
+    // Set game start time after first turn
+    if (this._currentTurn === 0) {
+      this._gameStartTime = actionTime;
+    }
+  }
+
+  private showCorrectChoiceWithTimeout(duration: number): void {
+    this._showCorrectChoice = true;
+
+    if (this._hideCorrectChoiceTimeout) {
+      clearTimeout(this._hideCorrectChoiceTimeout);
+    }
+
+    this._hideCorrectChoiceTimeout = setTimeout(() => {
+      this._showCorrectChoice = false;
+      this._turnStartTime = Date.now();
+      this.emitStateChange();
+    }, duration);
+  }
+
   private generateNewTurn(): void {
     // Randomly select correct button
     const randomIndex = new Random(MersenneTwister19937.autoSeed()).integer(
