@@ -1,5 +1,6 @@
 import { GithubIcon } from "lucide-react";
 
+import logoSrc from "@/assets/logo/logo.png";
 import { styled } from "@/styles/jsx";
 import { Button } from "@/ui/Button";
 import { GameStage } from "@@/game";
@@ -42,7 +43,7 @@ const AppHeader: React.FC = () => {
       p="4"
     >
       <styled.div display="flex" alignItems="center" gap="2">
-        <styled.img src="/public/logo/logo.png" height="10" width="10" />
+        <styled.img src={logoSrc} height="10" width="10" />
         <styled.span fontWeight="bold">Intuition Trainer</styled.span>
       </styled.div>
       <styled.div display="flex" alignItems="center" gap="2">
