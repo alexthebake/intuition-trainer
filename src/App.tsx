@@ -39,8 +39,11 @@ const AppHeader: React.FC = () => {
       width="full"
       display="flex"
       justifyContent="space-between"
+      bg={{ base: "bg/60", md: "transparent" }}
+      backdropFilter={{ base: "blur(10px)", md: "none" }}
       gap="2"
       p="4"
+      zIndex="999"
     >
       <styled.div display="flex" alignItems="center" gap="2">
         <styled.img src={logoSrc} height="10" width="10" />
