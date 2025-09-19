@@ -146,7 +146,7 @@ export const ScoreChart: React.FC<ScoreChartProps> = ({ css }) => {
             }}
             groupComponent={
               <VictoryClipContainer
-                clipPadding={{ left: 0, right: 0, top: 0, bottom: 0 }}
+                clipPadding={{ left: 0, right: 10, top: 0, bottom: 0 }}
               />
             }
           />
