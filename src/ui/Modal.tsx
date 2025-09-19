@@ -1,5 +1,6 @@
 import { XIcon } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import { create } from "zustand";
 
 import { useKeyEventHandler } from "@/lib/useKeyEventHandler";
 import { styled } from "@/styles/jsx";
@@ -16,6 +17,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
     onClose();
   }, [onClose]);
 
+  useTrackModalStateChange(isOpen);
   useKeyEventHandler("Escape", handleClose);
 
   if (!isOpen) return null;
@@ -37,7 +39,9 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       >
         <styled.div
           position="relative"
-          maxWidth={{ base: "90%", md: "1/2" }}
+          maxHeight="95vh"
+          overflowY="auto"
+          maxWidth={{ base: "90vw", md: "1/2" }}
           width="full"
           padding="8"
           bg="modal.bg"
@@ -54,4 +58,47 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
       </styled.div>
     </styled.div>
   );
+};
+
+type ModalStoreState = {
+  modalStack: number;
+};
+
+const useModalStore = create<ModalStoreState>()(() => ({
+  modalStack: 0,
+}));
+
+const useTrackModalStateChange = (isOpen: boolean) => {
+  // Increment the modalStack on open and decrement on close
+  useEffect(() => {
+    const delta = isOpen ? 1 : -1;
+    useModalStore.setState(({ modalStack }) => ({
+      modalStack: modalStack + delta,
+    }));
+  }, [isOpen]);
+
+  // Decrement the modalStack on unmount (even if isOpen hasn't changed)
+  useEffect(() => {
+    return () => {
+      useModalStore.setState(({ modalStack }) => ({
+        modalStack: modalStack - 1,
+      }));
+    };
+  }, []);
+};
+
+export const ModalProvider: React.FC<React.PropsWithChildren> = ({
+  children,
+}) => {
+  const hasModalOpen = useModalStore((state) => state.modalStack > 0);
+
+  useEffect(() => {
+    if (hasModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [hasModalOpen]);
+
+  return children;
 };

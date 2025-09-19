@@ -93,7 +93,6 @@ export const ScoreChart: React.FC<ScoreChartProps> = ({ css }) => {
           <VictoryVoronoiContainer
             voronoiDimension="x"
             labels={({ datum }) => {
-              console.log(datum.childName);
               if (datum.childName === "game-time") {
                 return `Duration: ${round(datum.y, 2)}s`;
               }

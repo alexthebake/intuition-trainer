@@ -3,6 +3,7 @@ import { GithubIcon } from "lucide-react";
 import logoSrc from "@/assets/logo/logo.png";
 import { styled } from "@/styles/jsx";
 import { Button } from "@/ui/Button";
+import { ModalProvider } from "@/ui/Modal";
 import { GameStage } from "@@/game";
 import { PrivacyPolicy } from "@@/privacy-policy";
 import { Stats } from "@@/statistics";
@@ -12,15 +13,14 @@ import { Why } from "@@/why";
 export const App: React.FC = () => {
   return (
     <ThemeProvider>
-      <styled.div pb="16">
-        <AppHeader />
-        <GameStage />
-        <Stats />
-        <styled.div display="flex" alignItems="center" justifyContent="center">
-          <Why />
-          <PrivacyPolicy />
+      <ModalProvider>
+        <styled.div pb="16">
+          <AppHeader />
+          <GameStage />
+          <Stats />
+          <AppFooter />
         </styled.div>
-      </styled.div>
+      </ModalProvider>
     </ThemeProvider>
   );
 };
@@ -52,6 +52,15 @@ const AppHeader: React.FC = () => {
         </Button>
         <ThemeSelector />
       </styled.div>
+    </styled.div>
+  );
+};
+
+const AppFooter: React.FC = () => {
+  return (
+    <styled.div display="flex" alignItems="center" justifyContent="center">
+      <Why />
+      <PrivacyPolicy />
     </styled.div>
   );
 };
