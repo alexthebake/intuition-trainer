@@ -18,7 +18,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
       display="flex"
       flexDirection="column"
       gap="1"
-      width="96"
+      width={{ base: "72", md: "96" }}
       mb="16" // TODO: Do this differently
     >
       {/* Progress Bar */}

@@ -90,8 +90,8 @@ export const GameButtons: React.FC<GameButtonsProps> = ({
   return (
     <styled.div
       position="relative"
-      width="80"
-      height="80"
+      width={{ base: "64", md: "80" }}
+      height={{ base: "64", md: "80" }}
       marginBottom="10"
       display="grid"
       gridTemplateColumns="1fr 1fr"

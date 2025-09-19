@@ -60,7 +60,8 @@ export const GameStage: React.FC = () => {
       alignItems="center"
       justifyContent="center"
       minHeight="100vh"
-      padding="5"
+      padding="6"
+      paddingTop={{ base: "16", md: "6" }}
       fontFamily="sans"
     >
       <styled.div

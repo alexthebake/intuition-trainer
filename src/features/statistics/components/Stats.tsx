@@ -25,6 +25,7 @@ export const Stats: React.FC = () => {
         <styled.div
           display="flex"
           alignItems="center"
+          flexDirection={{ base: "column", md: "row" }}
           gap="2"
           justifyContent="space-between"
           width="full"

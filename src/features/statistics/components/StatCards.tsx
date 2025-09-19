@@ -21,7 +21,12 @@ export const StatCards: React.FC = () => {
       gap={{ base: "4", md: "16" }}
     >
       {/* Main Statistics Cards */}
-      <styled.div display="flex" flexDirection="column" gap="2">
+      <styled.div
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        gap="4"
+      >
         <styled.h2 fontSize="md" fontWeight="bold">
           Statistics
         </styled.h2>
@@ -31,6 +36,7 @@ export const StatCards: React.FC = () => {
           alignItems="center"
           gap="4"
           justifyContent="center"
+          flexWrap="wrap"
         >
           <StatCard value={bestScore} label="Best Score" />
           <StatCard value={averageScore} label="Average Score" />
@@ -40,7 +46,12 @@ export const StatCards: React.FC = () => {
       </styled.div>
 
       {/* Timing Statistics Cards */}
-      <styled.div display="flex" flexDirection="column" gap="2">
+      <styled.div
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        gap="4"
+      >
         <styled.h2 fontSize="md" fontWeight="bold">
           Timing Statistics
         </styled.h2>
