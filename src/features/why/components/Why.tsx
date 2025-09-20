@@ -10,7 +10,7 @@ const LINKS = {
     "https://www.amazon.com/Meaning-Absurdity-bizarre-phenomena-reality-ebook/dp/B00770LCLW",
   espTrainer: "https://apps.apple.com/us/app/esp-trainer/id336882103",
   russelTarg: "https://en.wikipedia.org/wiki/Russell_Targ",
-  github: "https://github.com/csm/esp-trainer",
+  github: "https://github.com/alexthebake/intuition-trainer",
 };
 
 export const Why: React.FC = () => {
