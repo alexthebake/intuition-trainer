@@ -91,7 +91,7 @@ function calculateDerivedStats(history: GameHistoryEntry[]) {
   return {
     totalGamesPlayed: history.length,
     bestScore,
-    averageScore: round(averageScore / 100, 2),
+    averageScore: round(averageScore, 2),
     medianScore,
     averageGameTime: round(averageGameTime / 1000, 2),
     averageTurnTimeAcrossGames: round(averageTurnTimeAcrossGames / 1000, 2),
