@@ -1823,6 +1823,22 @@ const tokens = {
     "value": "var(--colors-stats-duration-datum)",
     "variable": "var(--colors-stats-duration-datum)"
   },
+  "colors.chart.axis.stroke": {
+    "value": "var(--colors-chart-axis-stroke)",
+    "variable": "var(--colors-chart-axis-stroke)"
+  },
+  "colors.chart.axis.label": {
+    "value": "var(--colors-chart-axis-label)",
+    "variable": "var(--colors-chart-axis-label)"
+  },
+  "colors.chart.axis.tickLabels": {
+    "value": "var(--colors-chart-axis-tick-labels)",
+    "variable": "var(--colors-chart-axis-tick-labels)"
+  },
+  "colors.chart.grid.stroke": {
+    "value": "var(--colors-chart-grid-stroke)",
+    "variable": "var(--colors-chart-grid-stroke)"
+  },
   "colors.button.primary.bg": {
     "value": "var(--colors-button-primary-bg)",
     "variable": "var(--colors-button-primary-bg)"
@@ -2150,6 +2166,34 @@ const tokens = {
   "colors.colorPalette.duration.datum": {
     "value": "var(--colors-color-palette-duration-datum)",
     "variable": "var(--colors-color-palette-duration-datum)"
+  },
+  "colors.colorPalette.axis.stroke": {
+    "value": "var(--colors-color-palette-axis-stroke)",
+    "variable": "var(--colors-color-palette-axis-stroke)"
+  },
+  "colors.colorPalette.stroke": {
+    "value": "var(--colors-color-palette-stroke)",
+    "variable": "var(--colors-color-palette-stroke)"
+  },
+  "colors.colorPalette.axis.label": {
+    "value": "var(--colors-color-palette-axis-label)",
+    "variable": "var(--colors-color-palette-axis-label)"
+  },
+  "colors.colorPalette.label": {
+    "value": "var(--colors-color-palette-label)",
+    "variable": "var(--colors-color-palette-label)"
+  },
+  "colors.colorPalette.axis.tickLabels": {
+    "value": "var(--colors-color-palette-axis-tick-labels)",
+    "variable": "var(--colors-color-palette-axis-tick-labels)"
+  },
+  "colors.colorPalette.tickLabels": {
+    "value": "var(--colors-color-palette-tick-labels)",
+    "variable": "var(--colors-color-palette-tick-labels)"
+  },
+  "colors.colorPalette.grid.stroke": {
+    "value": "var(--colors-color-palette-grid-stroke)",
+    "variable": "var(--colors-color-palette-grid-stroke)"
   },
   "colors.colorPalette.primary.bg": {
     "value": "var(--colors-color-palette-primary-bg)",

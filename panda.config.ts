@@ -156,6 +156,37 @@ export default defineConfig({
             },
           },
 
+          chart: {
+            axis: {
+              stroke: {
+                value: {
+                  base: "{colors.gray.200}",
+                  _dark: "{colors.gray.500}",
+                },
+              },
+              label: {
+                value: {
+                  base: "{colors.gray.800}",
+                  _dark: "{colors.gray.200}",
+                },
+              },
+              tickLabels: {
+                value: {
+                  base: "{colors.gray.600}",
+                  _dark: "{colors.gray.400}",
+                },
+              },
+            },
+            grid: {
+              stroke: {
+                value: {
+                  base: "{colors.gray.400}",
+                  _dark: "{colors.gray.600}",
+                },
+              },
+            },
+          },
+
           // Button variants
           button: {
             primary: {

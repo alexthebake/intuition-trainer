@@ -10,19 +10,46 @@ import {
 } from "victory";
 
 import { styled } from "@/styles/jsx";
-import { createCustomTheme } from "@@/statistics/components/ChartHelpers";
-import { useScoreChart } from "@@/statistics/hooks/useScoreChart";
-
 import { WithCss } from "@/styles/types";
-import { useIsDarkMode } from "@@/theme";
-import { round } from "lodash";
+import { useScoreChart } from "@@/statistics/hooks/useScoreChart";
+import { victoryTheme } from "../lib/victoryTheme";
 
 export type ScoreChartProps = WithCss;
 
 export const ScoreChart: React.FC<ScoreChartProps> = ({ css }) => {
-  const isDark = useIsDarkMode();
-
   const { lineChartData, barChartData, trendLineData } = useScoreChart();
+
+  const getGameByNumber = (gameNumber: number) => {
+    return lineChartData.find((datum) => datum.gameNumber === gameNumber);
+  };
+
+  const getScoreForGame = (gameNumber: number) => {
+    const game = getGameByNumber(gameNumber);
+    if (!game) return null;
+    return game.y;
+  };
+
+  const getDurationForGame = (gameNumber: number) => {
+    const game = getGameByNumber(gameNumber);
+    if (!game) return null;
+    return game.gameDuration;
+  };
+
+  const getTooltipText = (datum: (typeof lineChartData)[number]) => {
+    const lines = [];
+
+    const score = getScoreForGame(datum.gameNumber);
+    if (score) {
+      lines.push(`Score: ${score} points`);
+    }
+
+    const duration = getDurationForGame(datum.gameNumber);
+    if (duration) {
+      lines.push(`Duration: ${duration}s`);
+    }
+
+    return lines.join("\n");
+  };
 
   return (
     <styled.div
@@ -87,24 +114,14 @@ export const ScoreChart: React.FC<ScoreChartProps> = ({ css }) => {
         </styled.div>
       </styled.div>
       <VictoryChart
-        theme={createCustomTheme(isDark)}
+        theme={victoryTheme}
         width={600}
         containerComponent={
           <VictoryVoronoiContainer
             voronoiDimension="x"
-            labels={({ datum }) => {
-              if (datum.childName === "game-time") {
-                return `Duration: ${round(datum.y, 2)}s`;
-              }
-              if (datum.childName === "score-points") {
-                return `Score: ${round(datum.y, 2)} points`;
-              }
-              if (datum.childName === "trend-line") {
-                return `Avg: ${round(datum.y, 2)} points`;
-              }
-              return "---";
-            }}
-            labelComponent={<VictoryTooltip />}
+            labelComponent={
+              <VictoryTooltip text={({ datum }) => getTooltipText(datum)} />
+            }
             responsive
           />
         }

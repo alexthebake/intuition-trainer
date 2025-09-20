@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect } from "react";
 
 import { useTimeoutManager } from "@@/game/hooks/useTimeoutManager";
 import { Game } from "@@/game/lib/game";
@@ -7,12 +7,10 @@ import { gameStore } from "@@/game/lib/game.store";
 import { historyStore } from "@@/history/lib/history.store";
 
 export const useGameLifecycle = () => {
-  const gameCompletedRef = useRef(false);
-  const gameStartTimeRef = useRef<number | null>(null);
   const { timeouts, clearTimeout } = useTimeoutManager();
 
   const game = gameStore.use(({ game }) => game);
-  const status = gameStore.use(({ state }) => state.status);
+
   const isGameComplete = gameStore.use(({ state }) => state.isGameComplete);
   const showCorrectChoice = gameStore.use(
     ({ state }) => state.showCorrectChoice
@@ -31,17 +29,10 @@ export const useGameLifecycle = () => {
 
   // Track game completion and save to history
   useEffect(() => {
-    if (status === "playing" && !gameCompletedRef.current) {
-      // Game started, record start time
-      gameStartTimeRef.current = Date.now();
-      gameCompletedRef.current = false;
-    } else if (isGameComplete && !gameCompletedRef.current) {
-      // Game just completed, save to history
-      gameCompletedRef.current = true;
-
+    if (isGameComplete) {
       historyStore.actions.saveGameResult(game.gameStats);
     }
-  }, [isGameComplete, status, game]);
+  }, [isGameComplete, game]);
 
   // Clean up showCorrectChoice when game completes
   useEffect(() => {
@@ -58,10 +49,6 @@ export const useGameLifecycle = () => {
   }, [isGameComplete, showCorrectChoice, timeouts, clearTimeout]);
 
   const resetGame = useCallback(() => {
-    // Reset game completion tracking
-    gameCompletedRef.current = false;
-    gameStartTimeRef.current = null;
-
     // Reset game state
     gameStore.actions.reset();
   }, []);

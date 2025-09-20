@@ -100,6 +100,7 @@ function calculateDerivedStats(history: GameHistoryEntry[]) {
 
 // Actions
 const saveGameResult = (stats: GameStats) => {
+  console.log("saveGameResult", stats);
   const entry: GameHistoryEntry = {
     id: `game-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
     timestamp: new Date(),

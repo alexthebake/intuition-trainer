@@ -4,23 +4,18 @@ import {
   VictoryChart,
   VictoryContainer,
   VictoryHistogram,
-  VictoryTooltip,
 } from "victory";
 
-import { pluralize } from "@/lib/pluralize";
+import { victoryTheme } from "@/features/statistics/lib/victoryTheme";
 import { styled } from "@/styles/jsx";
 import { WithCss } from "@/styles/types";
-import { createCustomTheme } from "@@/statistics/components/ChartHelpers";
 import { useScoreDistribution } from "@@/statistics/hooks/useScoreDistribution";
-import { useIsDarkMode } from "@@/theme";
 
 export type ScoreDistributionChartProps = WithCss;
 
 export const ScoreDistributionChart: React.FC<ScoreDistributionChartProps> = ({
   css,
 }) => {
-  const isDark = useIsDarkMode();
-
   const { histogramData } = useScoreDistribution();
 
   return (
@@ -45,7 +40,7 @@ export const ScoreDistributionChart: React.FC<ScoreDistributionChartProps> = ({
         Shows the distribution of scores for all games played.
       </styled.p>
       <VictoryChart
-        theme={createCustomTheme(isDark)}
+        theme={victoryTheme}
         width={600}
         containerComponent={<VictoryContainer responsive />}
         padding={{ left: 60, right: 40, top: 40, bottom: 60 }}
@@ -68,11 +63,6 @@ export const ScoreDistributionChart: React.FC<ScoreDistributionChartProps> = ({
               strokeWidth: 1,
             },
           }}
-          labels={({ datum }) => {
-            const score = datum.binnedData[0].score;
-            return `${datum.y} ${pluralize(datum.y, "game")} at ${score} points`;
-          }}
-          labelComponent={<VictoryTooltip />}
         />
       </VictoryChart>
     </styled.div>
