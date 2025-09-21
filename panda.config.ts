@@ -38,6 +38,35 @@ export default defineConfig({
             },
           },
 
+          input: {
+            border: {
+              value: { base: "{colors.gray.200}", _dark: "{colors.gray.600}" },
+            },
+          },
+
+          alert: {
+            default: {
+              bg: {
+                value: {
+                  base: "{colors.gray.100}",
+                  _dark: "{colors.gray.900}",
+                },
+              },
+              text: {
+                value: {
+                  base: "{colors.gray.900}",
+                  _dark: "{colors.gray.100}",
+                },
+              },
+              border: {
+                value: {
+                  base: "{colors.gray.200}",
+                  _dark: "{colors.gray.800}",
+                },
+              },
+            },
+          },
+
           // Progress bar colors
           progress: {
             bg: {

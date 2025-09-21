@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useTimeoutManager } from "@@/game/hooks/useTimeoutManager";
 import { gameStore } from "@@/game/lib/game.store";
-import { GameResponse } from "@@/game/lib/game.types";
+import { GameMode, GameResponse } from "@@/game/lib/game.types";
 
 type UseGameControlsProps = {
   onImageShow?: (imageName: string) => void;
@@ -10,6 +10,7 @@ type UseGameControlsProps = {
   currentCorrectImage: string | null;
   chimeSrc?: string;
   chimeStartTime?: number;
+  gameMode?: GameMode;
 };
 
 export const useGameControls = ({
@@ -18,6 +19,7 @@ export const useGameControls = ({
   currentCorrectImage,
   chimeSrc = "/audio/tingsha.webm",
   chimeStartTime = 0,
+  gameMode = "default",
 }: UseGameControlsProps) => {
   const [clickedButton, setClickedButton] = useState<GameResponse | null>(null);
   const { timeouts, clearTimeout } = useTimeoutManager();
@@ -61,6 +63,10 @@ export const useGameControls = ({
 
       const result = gameStore.actions.makeChoice(color);
 
+      if (gameMode === "blind") {
+        return;
+      }
+
       // Handle audio/visual feedback here if needed
       if (result.shouldPlayChime) {
         playChime();
@@ -77,6 +83,7 @@ export const useGameControls = ({
       timeouts,
       clearTimeout,
       playChime,
+      gameMode,
     ]
   );
 

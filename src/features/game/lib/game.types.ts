@@ -40,3 +40,5 @@ export type GameStats = {
 };
 
 export type GameStatus = "ready" | "playing" | "completed";
+
+export type GameMode = "default" | "blind";

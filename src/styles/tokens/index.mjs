@@ -1739,6 +1739,22 @@ const tokens = {
     "value": "var(--colors-text-muted)",
     "variable": "var(--colors-text-muted)"
   },
+  "colors.input.border": {
+    "value": "var(--colors-input-border)",
+    "variable": "var(--colors-input-border)"
+  },
+  "colors.alert.default.bg": {
+    "value": "var(--colors-alert-default-bg)",
+    "variable": "var(--colors-alert-default-bg)"
+  },
+  "colors.alert.default.text": {
+    "value": "var(--colors-alert-default-text)",
+    "variable": "var(--colors-alert-default-text)"
+  },
+  "colors.alert.default.border": {
+    "value": "var(--colors-alert-default-border)",
+    "variable": "var(--colors-alert-default-border)"
+  },
   "colors.progress.bg": {
     "value": "var(--colors-progress-bg)",
     "variable": "var(--colors-progress-bg)"
@@ -2103,9 +2119,29 @@ const tokens = {
     "value": "var(--colors-color-palette-muted)",
     "variable": "var(--colors-color-palette-muted)"
   },
+  "colors.colorPalette.border": {
+    "value": "var(--colors-color-palette-border)",
+    "variable": "var(--colors-color-palette-border)"
+  },
+  "colors.colorPalette.default.bg": {
+    "value": "var(--colors-color-palette-default-bg)",
+    "variable": "var(--colors-color-palette-default-bg)"
+  },
   "colors.colorPalette.bg": {
     "value": "var(--colors-color-palette-bg)",
     "variable": "var(--colors-color-palette-bg)"
+  },
+  "colors.colorPalette.default.text": {
+    "value": "var(--colors-color-palette-default-text)",
+    "variable": "var(--colors-color-palette-default-text)"
+  },
+  "colors.colorPalette.text": {
+    "value": "var(--colors-color-palette-text)",
+    "variable": "var(--colors-color-palette-text)"
+  },
+  "colors.colorPalette.default.border": {
+    "value": "var(--colors-color-palette-default-border)",
+    "variable": "var(--colors-color-palette-default-border)"
   },
   "colors.colorPalette.fill": {
     "value": "var(--colors-color-palette-fill)",
@@ -2119,10 +2155,6 @@ const tokens = {
     "value": "var(--colors-color-palette-hover)",
     "variable": "var(--colors-color-palette-hover)"
   },
-  "colors.colorPalette.text": {
-    "value": "var(--colors-color-palette-text)",
-    "variable": "var(--colors-color-palette-text)"
-  },
   "colors.colorPalette.text.inverted": {
     "value": "var(--colors-color-palette-text-inverted)",
     "variable": "var(--colors-color-palette-text-inverted)"
@@ -2130,10 +2162,6 @@ const tokens = {
   "colors.colorPalette.inverted": {
     "value": "var(--colors-color-palette-inverted)",
     "variable": "var(--colors-color-palette-inverted)"
-  },
-  "colors.colorPalette.border": {
-    "value": "var(--colors-color-palette-border)",
-    "variable": "var(--colors-color-palette-border)"
   },
   "colors.colorPalette.card.bg": {
     "value": "var(--colors-color-palette-card-bg)",

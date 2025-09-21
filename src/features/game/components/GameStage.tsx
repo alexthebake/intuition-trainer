@@ -1,6 +1,8 @@
 import { useCallback } from "react";
 
+import { appStore } from "@/features/app";
 import { styled } from "@/styles/jsx";
+import { BlindModeWarning } from "@@/game/components/BlindModeWarning";
 import { GameButtons } from "@@/game/components/GameButtons";
 import { GameComplete } from "@@/game/components/GameComplete";
 import { GameControls } from "@@/game/components/GameControls";
@@ -13,6 +15,9 @@ import { useTimeoutManager } from "@@/game/hooks/useTimeoutManager";
 import { gameStore } from "@@/game/lib/game.store";
 
 export const GameStage: React.FC = () => {
+  const gameMode = appStore.use((state) => state.settings.mode);
+  const isBlindMode = gameMode === "blind";
+
   const {
     currentTurn,
     score,
@@ -41,6 +46,7 @@ export const GameStage: React.FC = () => {
       onImageShow: showImage,
       currentCorrectImage,
       chimeStartTime: 1.2,
+      gameMode,
     });
 
   const handleReset = useCallback(() => {
@@ -70,28 +76,25 @@ export const GameStage: React.FC = () => {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
+        textAlign="center"
+        maxWidth="450"
         gap="2"
         mb="16"
       >
-        <styled.p
-          fontSize="sm"
-          color="text.secondary"
-          textAlign="center"
-          maxWidth="450"
-        >
+        <styled.p fontSize="sm" color="text.secondary">
           Behind one of these buttons is an image. Your job is to guess which
           button is the correct one. Listen to your intuition and{" "}
           <em>good luck!</em>
         </styled.p>
       </styled.div>
 
-      <ProgressBar score={score} />
+      {!isBlindMode && <ProgressBar score={score} />}
 
       <GameButtons
         onButtonClick={handleButtonClick}
         disabled={status !== "playing"}
         clickedButton={clickedButton}
-        showCorrectChoice={showCorrectChoice}
+        showCorrectChoice={showCorrectChoice && !isBlindMode}
         previouslyCorrectButton={previouslyCorrectButton}
       />
 
@@ -122,6 +125,7 @@ export const GameStage: React.FC = () => {
         passDisabled={status !== "playing"}
       />
 
+      {isBlindMode && <BlindModeWarning />}
       {isGameComplete && <GameComplete score={score} />}
 
       {/* Debug Info (remove in production) */}
