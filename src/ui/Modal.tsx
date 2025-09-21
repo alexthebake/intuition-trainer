@@ -6,13 +6,20 @@ import { useKeyEventHandler } from "@/lib/useKeyEventHandler";
 import { styled } from "@/styles/jsx";
 
 import { Button } from "./Button";
+import { WithCss } from "@/styles/types";
 
 type ModalProps = React.PropsWithChildren<{
   isOpen: boolean;
   onClose: () => void;
-}>;
+}> &
+  WithCss;
 
-export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+export const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  css,
+}) => {
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
@@ -47,6 +54,7 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
           bg="modal.bg"
           borderRadius="md"
           shadow="md"
+          css={css}
         >
           <styled.div position="absolute" top="4" right="4">
             <Button variant="ghost" size="iconSmall" onClick={onClose}>
